@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp İletişim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(37, 211, 102, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .whatsapp-icon {
+            width: 80px;
+            height: 80px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .whatsapp-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .status {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 4px solid #25D366;
+            position: relative;
+            z-index: 2;
+        }
+
+        .status h2 {
+            color: #555;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .country-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .flag {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(45deg, #25D366, #20b358);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            position: relative;
+            z-index: 2;
+            transform: translateY(0);
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #25D366;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #dc3545;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .info {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 20px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="whatsapp-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.89 3.215"/>
+            </svg>
+        </div>
+
+        <h1>WhatsApp İletişim</h1>
+
+        <div class="status">
+            <h2>Konumunuz Tespit Ediliyor...</h2>
+            <div class="country-info">
+                <div class="loading"></div>
+                <span id="locationText">Lütfen bekleyin...</span>
+            </div>
+        </div>
+
+        <a href="#" id="whatsappBtn" class="whatsapp-btn" style="display: none;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.89 3.215"/>
+            </svg>
+            Otomatik Yönlendirme...
+        </a>
+
+        <div class="info">
+            Konumunuza göre otomatik olarak en yakın destek ekibimize yönlendirileceksiniz.
+        </div>
+    </div>
+
+    <script>
+        // Ülke bazlı WhatsApp numaraları (örnek)
+        const countryNumbers = {
+            'TR': {
+                number: '+905551234567',
+                name: 'Türkiye',
+                flag: '🇹🇷'
+            },
+            'UZ': {
+                number: '+998901234567',
+                name: 'Özbekistan',
+                flag: '🇺🇿'
+            },
+            'KZ': {
+                number: '+77051234567',
+                name: 'Kazakistan',
+                flag: '🇰🇿'
+            },
+            'AZ': {
+                number: '+994501234567',
+                name: 'Azerbaycan',
+                flag: '🇦🇿'
+            },
+            'KG': {
+                number: '+996551234567',
+                name: 'Kırgızistan',
+                flag: '🇰🇬'
+            },
+            'TJ': {
+                number: '+992901234567',
+                name: 'Tacikistan',
+                flag: '🇹🇯'
+            },
+            'TM': {
+                number: '+993651234567',
+                name: 'Türkmenistan',
+                flag: '🇹🇲'
+            },
+            'DE': {
+                number: '+491701234567',
+                name: 'Almanya',
+                flag: '🇩🇪'
+            },
+            'US': {
+                number: '+15551234567',
+                name: 'Amerika',
+                flag: '🇺🇸'
+            },
+            'DEFAULT': {
+                number: '+905551234567',
+                name: 'Genel Destek',
+                flag: '🌍'
+            }
+        };
+
+        async function getCountryFromIP() {
+            try {
+                // Birden fazla IP servisini dene
+                const services = [
+                    'https://ipapi.co/json/',
+                    'https://api.ipify.org?format=json',
+                    'https://ipinfo.io/json',
+                    'https://ipwho.is/'
+                ];
+
+                let countryCode = null;
+                
+                // İlk servisi dene (ipapi.co - ülke kodu verir)
+                try {
+                    const response = await fetch(services[0], { cache: 'no-store', mode: 'cors' });
+                    const data = await response.json();
+                    if (data.country_code) {
+                        countryCode = data.country_code;
+                    }
+                } catch (e) {
+                    console.log('İlk servis başarısız:', e);
+                }
+
+                // Eğer başarısızsa ikinci servisi dene
+                if (!countryCode) {
+                    try {
+                        const ipResponse = await fetch(services[1], { cache: 'no-store', mode: 'cors' });
+                        const ipData = await ipResponse.json();
+                        
+                        // IP ile ülke tespiti için ipinfo.io kullan
+                        const geoResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`, { cache: 'no-store', mode: 'cors' });
+                        const geoData = await geoResponse.json();
+                        
+                        if (geoData.country) {
+                            countryCode = geoData.country;
+                        }
+                    } catch (e) {
+                        console.log('İkinci servis başarısız:', e);
+                    }
+                }
+
+                // Üçüncü yedek: ipwho.is (CORS destekli)
+                if (!countryCode) {
+                    try {
+                        const whoResponse = await fetch(services[3], { cache: 'no-store', mode: 'cors' });
+                        const whoData = await whoResponse.json();
+                        if (whoData && (whoData.country_code || whoData.country_code_alpha2)) {
+                            countryCode = (whoData.country_code || whoData.country_code_alpha2);
+                        }
+                    } catch (e) {
+                        console.log('Üçüncü servis başarısız:', e);
+                    }
+                }
+
+                return countryCode;
+            } catch (error) {
+                console.error('IP servisleri başarısız:', error);
+                return null;
+            }
+        }
+
+        function updateUI(countryCode) {
+            const locationText = document.getElementById('locationText');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            let statusTitleEl = document.querySelector('.status h2');
+            if (!statusTitleEl) {
+                // Güvenli: Eksikse geri oluştur
+                const statusContainer = document.querySelector('.status');
+                statusContainer.innerHTML = '<h2></h2><div class="country-info"><div class="loading"></div><span id="locationText">Lütfen bekleyin...</span></div>';
+                statusTitleEl = document.querySelector('.status h2');
+            }
+
+            if (countryCode && countryNumbers[countryCode]) {
+                const countryData = countryNumbers[countryCode];
+                
+                statusTitleEl.textContent = 'Konumunuz Tespit Edildi!';
+                locationText.innerHTML = `
+                    <span class="flag">${countryData.flag}</span>
+                    <strong>${countryData.name}</strong>
+                `;
+
+                // WhatsApp URL'sini oluştur
+                const message = encodeURIComponent(`Merhaba! ${countryData.name} üzerinden size ulaşıyorum.`);
+                const whatsappUrl = `https://wa.me/${countryData.number.replace('+', '')}?text=${message}`;
+                // Butonu görünür ve tıklanabilir yap (popup engelleyicilere karşı)
+                whatsappBtn.href = whatsappUrl;
+                whatsappBtn.style.display = 'inline-flex';
+                whatsappBtn.textContent = 'WhatsApp\'a git';
+                
+                // Otomatik yönlendirme
+                setTimeout(() => {
+                    statusTitleEl.textContent = 'WhatsApp\'a Yönlendiriliyorsunuz...';
+                    locationText.innerHTML = `
+                        <div class="loading"></div>
+                        <span>Lütfen bekleyin...</span>
+                    `;
+                    
+                    // 2 saniye sonra WhatsApp'a yönlendir
+                    setTimeout(() => {
+                        window.location.href = whatsappUrl;
+                    }, 2000);
+                }, 1000);
+                
+            } else {
+                // Varsayılan numara kullan
+                const defaultData = countryNumbers['DEFAULT'];
+                
+                statusTitleEl.textContent = 'Varsayılan Desteğe Yönlendiriliyorsunuz';
+                locationText.innerHTML = `
+                    <span class="flag">${defaultData.flag}</span>
+                    <strong>${defaultData.name}</strong>
+                `;
+
+                const message = encodeURIComponent('Merhaba! Size ulaşmak istiyorum.');
+                const whatsappUrl = `https://wa.me/${defaultData.number.replace('+', '')}?text=${message}`;
+                // Butonu görünür ve tıklanabilir yap (popup engelleyicilere karşı)
+                whatsappBtn.href = whatsappUrl;
+                whatsappBtn.style.display = 'inline-flex';
+                whatsappBtn.textContent = 'WhatsApp\'a git';
+                
+                // Otomatik yönlendirme
+                setTimeout(() => {
+                    statusTitleEl.textContent = 'WhatsApp\'a Yönlendiriliyorsunuz...';
+                    locationText.innerHTML = `
+                        <div class="loading"></div>
+                        <span>Lütfen bekleyin...</span>
+                    `;
+                    
+                    // 2 saniye sonra WhatsApp'a yönlendir
+                    setTimeout(() => {
+                        window.location.href = whatsappUrl;
+                    }, 2000);
+                }, 1000);
+            }
+        }
+
+        function showError() {
+            const statusTitleEl = document.querySelector('.status h2');
+            const locationText = document.getElementById('locationText');
+            if (statusTitleEl) {
+                statusTitleEl.textContent = 'Konum tespit edilemedi';
+            }
+            if (locationText) {
+                locationText.textContent = 'Varsayılan desteğe yönlendirileceksiniz.';
+            }
+            updateUI('DEFAULT');
+        }
+
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        async function init() {
+            try {
+                // Konum tespiti yap
+                const countryCode = await getCountryFromIP();
+                
+                // 2 saniye bekle (kullanıcı deneyimi için)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                if (countryCode) {
+                    updateUI(countryCode);
+                    console.log('Tespit edilen ülke:', countryCode);
+                } else {
+                    throw new Error('Ülke tespit edilemedi');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                showError();
+            }
+        }
+
+        // Sayfa yüklendiğinde başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+
+        // Debug için console'a log yaz
+        console.log('WhatsApp Yönlendirme Sistemi Başlatıldı');
+        console.log('Mevcut ülkeler:', Object.keys(countryNumbers));
+    </script>
+</body>
+</html>
